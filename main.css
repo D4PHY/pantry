@@ -1,0 +1,19 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  padding: 4rem 0;
+  font-size: 1.6rem;
+  width: 70%;
+  margin: auto;
+  text-align: center;
+}
+
+.pantry-item {
+  margin: 2rem 0;
+}

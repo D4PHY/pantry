@@ -1,1 +1,1 @@
-# TODO List saved in loalStorage
+# TODO List as in Pantry food list saved in localStorage
