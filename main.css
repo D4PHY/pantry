@@ -17,3 +17,7 @@ body {
 .pantry-item {
   margin: 2rem 0;
 }
+
+.pantry-item input:checked + label {
+  text-decoration: line-through;
+}
