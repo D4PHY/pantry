@@ -1,28 +1,25 @@
-function pantry() {
+(function () {
   // Select DOM Elements:
   const pantryInput = document.querySelector(".pantry-input");
   const pantryAddBtn = document.querySelector(".pantry-add-btn");
-  const pantryList = document.querySelector(".pantry-list");
+  const pantryList = document.querySelector(".list");
 
   // Implement a dynamic value for the id of each new item and save all added items in local storage
-  let idIndex = 1;
   let localPantry = [];
 
-  if (localStorage.getItem("localPantry")) {
-    localPantry = JSON.parse(localStorage.getItem("localPantry"));
+  const savedPantry = localStorage.getItem("localPantry");
+  if (savedPantry) {
+    localPantry = JSON.parse(savedPantry);
   }
 
   /* Add a new item on the screen in pantryList, push it in the array used to save item in the local storage
      and update the local storage with the renew array: */
   function addToPantry() {
     if (pantryInput.value !== "") {
-      const item = renderItem(pantryInput.value);
-
-      pantryList.appendChild(item);
-
       localPantry.push({ itemName: pantryInput.value, isChecked: false });
 
       updateLocalPantry();
+      renderPantryList();
     }
 
     pantryInput.value = "";
@@ -30,15 +27,12 @@ function pantry() {
 
   // Populate pantryList with all items from local storage:
   function renderPantryList() {
-    const localPantry = JSON.parse(localStorage.getItem("localPantry"));
-
-    for (itemVal of localPantry) {
-      const item = renderItem(itemVal.itemName, itemVal.isChecked);
+    pantryList.innerHTML = "";
+    localPantry.forEach(function (itemVal, index) {
+      const item = renderItem(itemVal.itemName, itemVal.isChecked, index);
 
       pantryList.appendChild(item);
-
-      idIndex++;
-    }
+    });
   }
 
   // Update localStorage:
@@ -47,8 +41,8 @@ function pantry() {
   }
 
   // Create and configure pantry item:
-  function renderItem(itemVal, isChecked) {
-    let inputId = `pantry-item-${idIndex}`;
+  function renderItem(itemVal, isChecked, index) {
+    let inputId = `pantry-item-${index + 1}`;
 
     const pantryItem = document.createElement("div");
     pantryItem.classList.add("pantry-item");
@@ -57,16 +51,16 @@ function pantry() {
     input.type = "checkbox";
     input.id = inputId;
     input.checked = isChecked;
+    input.value = itemVal;
     input.addEventListener("change", function (e) {
       for (const itemVal of localPantry) {
-        if (itemVal.itemName === e.target.nextElementSibling.textContent) {
+        if (itemVal.itemName === e.target.value) {
           itemVal.isChecked = e.target.checked;
           updateLocalPantry();
+          break;
         }
       }
     });
-
-    input.value = inputId;
 
     const label = document.createElement("label");
     label.textContent = itemVal;
@@ -81,8 +75,6 @@ function pantry() {
   // Add event handlers:
   document.addEventListener("DOMContentLoaded", renderPantryList);
   pantryAddBtn.addEventListener("click", addToPantry);
-}
-
-pantry();
+})();
 
 // localStorage.clear();
