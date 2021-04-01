@@ -1,18 +1,22 @@
 // Select DOM Elements:
 const pantryInput = document.querySelector(".pantry-input");
-const pantryAddBtn = document.querySelector(".pantry-add-btn");
+const pantryAddBtn = document.querySelector("[data-btn-add]");
+const pantryDeleteBtn = document.querySelector("[data-btn-delete]");
 const pantryList = document.querySelector(".pantry-list");
 
 // Save pantry list in local storage:
 let localPantry = [];
 const savedPantry = localStorage.getItem("localPantry");
 if (savedPantry) {
+  console.log(localPantry);
   localPantry = JSON.parse(savedPantry);
+  console.log(localPantry);
 }
 
 // Add item in pantryList, update localPantry and render the pantry list:
 function addToPantry() {
   if (pantryInput.value !== "") {
+    console.log(localPantry);
     localPantry.push({ itemName: pantryInput.value, isChecked: false });
 
     updateLocalPantry();
@@ -69,13 +73,25 @@ function handleCheckbox(e) {
   updateLocalPantry();
 }
 
+function handleDelete() {
+  localPantry = localPantry.filter(function (item) {
+    return !item.isChecked;
+  });
+  updateLocalPantry();
+  renderPantryList();
+}
+
 // Add event handlers:
 document.addEventListener("DOMContentLoaded", renderPantryList);
+
 pantryAddBtn.addEventListener("click", addToPantry);
 document.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
+    e.preventDefault();
     addToPantry();
   }
 });
+
+pantryDeleteBtn.addEventListener("click", handleDelete);
 
 // localStorage.clear();
